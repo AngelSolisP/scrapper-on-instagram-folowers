@@ -51,32 +51,38 @@ with col2:
 # Gráfica de nuevos seguidores por hora
 st.header('Crecimiento Horario de Nuevos Seguidores')
 
-fig1, ax1 = plt.subplots(figsize=(12, 6))
-ax1.plot(filtered_stats_df['timestamp'], filtered_stats_df['new_followers'], marker='o', linestyle='-')
-ax1.set_xlabel('Fecha y Hora')
-ax1.set_ylabel('Nuevos Seguidores')
-ax1.set_title('Crecimiento Horario de Nuevos Seguidores')
-ax1.grid(True)
-plt.xticks(rotation=45)
-plt.tight_layout()
-st.pyplot(fig1)
+if not filtered_stats_df.empty:
+    fig1, ax1 = plt.subplots(figsize=(12, 6))
+    ax1.plot(filtered_stats_df['timestamp'], filtered_stats_df['new_followers'], marker='o', linestyle='-')
+    ax1.set_xlabel('Fecha y Hora')
+    ax1.set_ylabel('Nuevos Seguidores')
+    ax1.set_title('Crecimiento Horario de Nuevos Seguidores')
+    ax1.grid(False)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    st.pyplot(fig1)
+else:
+    st.write("No hay datos disponibles para mostrar en el rango seleccionado.")
 
 # Gráfica del total acumulado de seguidores
 st.header('Crecimiento Acumulado de Seguidores')
 
-# Calcular el total acumulado basado en hourly_stats_df dentro el rango filtrado
-filtered_stats_df = filtered_stats_df.sort_values('timestamp')
-filtered_stats_df['total_followers'] = filtered_stats_df['new_followers'].cumsum()
+if not filtered_stats_df.empty:
+    # Calcular el total acumulado basado en hourly_stats_df dentro el rango filtrado
+    filtered_stats_df = filtered_stats_df.sort_values('timestamp')
+    filtered_stats_df['total_followers'] = filtered_stats_df['new_followers'].cumsum()
 
-fig2, ax2 = plt.subplots(figsize=(12, 6))
-ax2.plot(filtered_stats_df['timestamp'], filtered_stats_df['total_followers'], marker='o', linestyle='-')
-ax2.set_xlabel('Fecha y Hora')
-ax2.set_ylabel('Total Acumulado de Seguidores')
-ax2.set_title('Crecimiento Acumulado de Seguidores')
-ax2.grid(True)
-plt.xticks(rotation=45)
-plt.tight_layout()
-st.pyplot(fig2)
+    fig2, ax2 = plt.subplots(figsize=(12, 6))
+    ax2.plot(filtered_stats_df['timestamp'], filtered_stats_df['total_followers'], marker='o', linestyle='-')
+    ax2.set_xlabel('Fecha y Hora')
+    ax2.set_ylabel('Total Acumulado de Seguidores')
+    ax2.set_title('Crecimiento Acumulado de Seguidores')
+    ax2.grid(False)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    st.pyplot(fig2)
+else:
+    st.write("No hay datos disponibles para mostrar en el rango seleccionado.")
 
 # Gráfica de seguidores verificados vs no verificados
 st.header('Distribución de Seguidores Verificados')
@@ -114,4 +120,7 @@ filtered_df = filtered_df[
     (filtered_df['date_added'] <= end_time)
 ]
 
-st.dataframe(filtered_df[['userName', 'profileUrl', 'isVerified', 'date_added', 'date_last_seen']].sort_values(by='date_added', ascending=False))
+if not filtered_df.empty:
+    st.dataframe(filtered_df[['userName', 'profileUrl', 'isVerified', 'date_added', 'date_last_seen']].sort_values(by='date_added', ascending=False))
+else:
+    st.write("No hay seguidores en el rango de tiempo seleccionado.")
